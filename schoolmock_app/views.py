@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -127,3 +128,8 @@ class ResultViewSet(viewsets.ModelViewSet):
         result.save()
 
         return Response({'message': 'Test submitted', 'result_id': result.id}, status=status.HTTP_200_OK)
+
+# front views
+
+def home(request):
+    return render(request, 'schoolmock_front/index.html')
