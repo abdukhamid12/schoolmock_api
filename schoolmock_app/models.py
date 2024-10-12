@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from datetime import timedelta
 
 class School(models.Model):
     name = models.CharField(max_length=100)
@@ -55,3 +54,35 @@ class Result(models.Model):
 
     def __str__(self):
         return f'{self.student.first_name} {self.student.last_name} - {self.test.name} - Score: {self.score}'
+
+
+
+class TeacherInput(models.Model):
+    language = models.TextField(max_length=255)
+    difficulty = models.TextField(max_length=255)
+    subject_name = models.TextField(max_length=255)
+    class_name = models.IntegerField()
+    quarter = models.TextField(max_length=255)
+    information = models.TextField(max_length=500)
+
+    def __str__(self):
+        return f'{self.class_name} {self.subject_name} {self.quarter}'
+
+
+# Renamed Question model related to TeacherInput
+class TeacherQuestion(models.Model):
+    category = models.ForeignKey(TeacherInput, on_delete=models.CASCADE, related_name="questions")
+    theme = models.CharField(max_length=255)
+    question_level = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.category} {self.theme}'
+
+
+class Option(models.Model):
+    question = models.ForeignKey(TeacherQuestion, on_delete=models.CASCADE, related_name='options')  # Updated to use TeacherQuestion
+    answer = models.CharField(max_length=100)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.answer

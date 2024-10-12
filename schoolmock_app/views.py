@@ -133,3 +133,9 @@ class ResultViewSet(viewsets.ModelViewSet):
 
 def home(request):
     return render(request, 'schoolmock_front/index.html')
+
+def write_id(request):
+    return render(request, 'schoolmock_front/write_id.html')
+
+def waiting_page(request):
+    return render(request, 'schoolmock_front/waiting.html')

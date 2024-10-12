@@ -1,1 +1,1 @@
-from django.urls import pathfrom .views import *urlpatterns = [    path('', home, name='home')]
+from django.urls import pathfrom .views import *urlpatterns = [    path('', home, name='home'),    path('write_id', write_id, name='write_id'),    path('waiting', waiting_page, name='waiting'),]
