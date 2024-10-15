@@ -4,9 +4,3 @@ from .models import *
 admin.site.register(TeacherInput)
 admin.site.register(Option)
 admin.site.register(TeacherQuestion)
-admin.site.register(StudentInput)
-
-class OptionAdmin(admin.ModelAdmin):
-    model = Option
-    extra = 4
-    max_num = 4

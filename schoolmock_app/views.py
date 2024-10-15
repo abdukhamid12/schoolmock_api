@@ -132,19 +132,20 @@ class ResultViewSet(viewsets.ModelViewSet):
 
 # front views
 
+
+
 def home(request):
-    return render(request, 'schoolmock_front/index.html')
+    # Initialize the form for both GET and POST requests
+    form = StudentForm()  # Initialize an empty form for GET requests
 
-def write_id(request):
     if request.method == 'POST':
-        student_form = StudentForm(request.POST)
-        if student_form.is_valid():
-            student_form.save()
-            return redirect('waiting')
-    else:
-        student_form = StudentForm()  # Initialize the form for GET request
+        form = StudentForm(request.POST)  # Populate the form with POST data
+        if form.is_valid():
+            form.save()
+            return redirect('home')  # Redirect after successful form submission
 
-    return render(request, 'schoolmock_front/write_id.html', {'student_form': student_form})
+    # Render the form regardless of the request method
+    return render(request, 'schoolmock_front/index.html', {'form': form})
 
 def waiting_page(request):
     return render(request, 'schoolmock_front/waiting.html')

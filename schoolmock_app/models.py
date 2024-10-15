@@ -1,4 +1,5 @@
 import string
+import uuid
 
 from django.db import models
 from django.utils import timezone
@@ -59,6 +60,7 @@ class Result(models.Model):
         return f'{self.student.first_name} {self.student.last_name} - {self.test.name} - Score: {self.score}'
 
 class TeacherInput(models.Model):
+    test_id = models.CharField(max_length=6)
     language = models.CharField(max_length=255)  # Changed to CharField
     difficulty = models.CharField(max_length=255)
     subject_name = models.CharField(max_length=255)
@@ -96,6 +98,5 @@ class Option(models.Model):
     def __str__(self):
         return self.answer
 
-
 class StudentInput(models.Model):
-    test_id = models.CharField(max_length=10, unique=True)
+    test_id = models.ForeignKey(TeacherInput, on_delete=models.CASCADE)
