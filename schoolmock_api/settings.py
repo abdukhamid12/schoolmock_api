@@ -67,7 +67,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'schoolmock_api.wsgi.application'
 
 # Database

@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.utils import timezone
 from datetime import timedelta
-from .models import School, ClassGroup, Student, Test, Question, Result
+from .models import *
+from .forms import *
 from .serializers import SchoolSerializer, ClassGroupSerializer, StudentSerializer, TestSerializer, QuestionSerializer, ResultSerializer
 
 # ViewSet для школ
@@ -135,7 +136,15 @@ def home(request):
     return render(request, 'schoolmock_front/index.html')
 
 def write_id(request):
-    return render(request, 'schoolmock_front/write_id.html')
+    if request.method == 'POST':
+        student_form = StudentForm(request.POST)
+        if student_form.is_valid():
+            student_form.save()
+            return redirect('waiting')
+    else:
+        student_form = StudentForm()  # Initialize the form for GET request
+
+    return render(request, 'schoolmock_front/write_id.html', {'student_form': student_form})
 
 def waiting_page(request):
     return render(request, 'schoolmock_front/waiting.html')

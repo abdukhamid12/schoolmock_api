@@ -1,5 +1,9 @@
+import string
+
 from django.db import models
 from django.utils import timezone
+import random
+
 
 class School(models.Model):
     name = models.CharField(max_length=100)
@@ -36,7 +40,6 @@ class Test(models.Model):
         return self.name
 
 
-
 class Question(models.Model):
     text = models.TextField()
     score = models.IntegerField()  # Балл за вопрос в зависимости от сложности
@@ -55,24 +58,28 @@ class Result(models.Model):
     def __str__(self):
         return f'{self.student.first_name} {self.student.last_name} - {self.test.name} - Score: {self.score}'
 
-
-
 class TeacherInput(models.Model):
-    language = models.TextField(max_length=255)
-    difficulty = models.TextField(max_length=255)
-    subject_name = models.TextField(max_length=255)
-    class_name = models.IntegerField()
-    quarter = models.TextField(max_length=255)
+    language = models.CharField(max_length=255)  # Changed to CharField
+    difficulty = models.CharField(max_length=255)
+    subject_name = models.CharField(max_length=255)
+    class_name = models.CharField(max_length=255)  # class_name is a CharField
+    quarter = models.CharField(max_length=255)
     information = models.TextField(max_length=500)
 
     def __str__(self):
         return f'{self.class_name} {self.subject_name} {self.quarter}'
 
 
-# Renamed Question model related to TeacherInput
+    def save(self, *args, **kwargs):
+        if not self.test_id:
+            self.test_id = ''.join(random.choices(string.digits, k=6))  # 6 xonali ID yaratish
+        super().save(*args, **kwargs)
+
+
 class TeacherQuestion(models.Model):
-    category = models.ForeignKey(TeacherInput, on_delete=models.CASCADE, related_name="questions")
+    category = models.ForeignKey(TeacherInput, on_delete=models.CASCADE, null=True, related_name="questions")
     theme = models.CharField(max_length=255)
+    test_quarter = models.CharField(max_length=255, null=True, blank=True)
     question_level = models.CharField(max_length=255)
 
     def __str__(self):
@@ -80,9 +87,15 @@ class TeacherQuestion(models.Model):
 
 
 class Option(models.Model):
-    question = models.ForeignKey(TeacherQuestion, on_delete=models.CASCADE, related_name='options')  # Updated to use TeacherQuestion
-    answer = models.CharField(max_length=100)
+    question = models.ForeignKey(TeacherQuestion, on_delete=models.SET_NULL, null=True, related_name='options')
+    question_for_test = models.TextField(max_length=255)
+    answer = models.TextField()
     is_correct = models.BooleanField(default=False)
+    test_language = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.answer
+
+
+class StudentInput(models.Model):
+    test_id = models.CharField(max_length=10, unique=True)

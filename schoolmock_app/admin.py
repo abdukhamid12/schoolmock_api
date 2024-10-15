@@ -1,8 +1,12 @@
 from django.contrib import admin
 from .models import *
 # Register your models here.
-admin.site.register(School, ClassGroup,)
-admin.site.register(Student, Test,)
-admin.site.register(Question, Result,)
-admin.site.register(TeacherInput, TeacherQuestion,)
+admin.site.register(TeacherInput)
 admin.site.register(Option)
+admin.site.register(TeacherQuestion)
+admin.site.register(StudentInput)
+
+class OptionAdmin(admin.ModelAdmin):
+    model = Option
+    extra = 4
+    max_num = 4
